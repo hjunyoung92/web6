@@ -3,17 +3,19 @@ package org.zerock.dao;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+/**
+ * Application Lifecycle Listener implementation class MyBatisLoader
+ *
+ */
 public class MyBatisLoader {
 	
 	public static  SqlSessionFactory sqlSessionFactory;
+	public int i;
 	
 	static {
     	String resource = "mybatis-config.xml";
@@ -23,7 +25,6 @@ public class MyBatisLoader {
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -1,18 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zerock.dao.MsgMapper">
-  <select id="getTime" resultType="string">
-    select sysdate from dual
-  </select>
 
 	<insert id="insertMsg" parameterType="MsgVO">
-	insert into TBL_TEAM_MSG (mno, sender, whom, MSG)
-	values(seq_team_msg.nextval,#{sender},#{whom},#{MSG)
+		insert into TBL_TEAM_MSG
+		(mno, sender, whom, msg)
+		values (seq_team_msg.nextval, #{sender},
+		#{whom}, #{msg})
 	</insert>
 	<insert id="insertFile" parameterType="MsgFileVO">
-	insert into tbl_team_msg_file(fno, mno, savename, originname)
-	values (seq_team_msg_file.nextval, seq_team_msg.currval,#{savename},#{originname})
+		insert into
+		tbl_team_msg_file(fno, mno, savename, originname)
+		values (seq_team_file.nextval, seq_team_msg.currval,
+		#{savename},#{originname})
 	</insert>
+
+	<select id="receiveList" resultType="MsgVO">
+		select * from tbl_team_msg
+		where whom = #{username} order by mno desc
+	</select>
+	<resultMap type="MsgVO" id="MsgMap">
+	
+	<id column="mno" property="mno"/>
+	
+	<result column="whom" property="whom"/>
+	<result column="sender" property="sender"/>
+	<result column="msg" property="msg"/>
+	<result column="regdate" property="regdate"/>
+	<collection property="files" resultMap="FileMap">
+	<id column="mno" property="mno"/>
+	</collection>
+	
+	</resultMap>
+
+	<resultMap type="MsgFileVO" id="FileMap">
+	<id property="fno" column="fno"/>
+	<result column="mno" property="mno"/>
+	<result column="savename" property="savename"/>
+	<result column="originname" property="originname"/>
+	
+	</resultMap>
+	<select id="read" resultMap="MsgMap">
+		select *
+		from TBL_TEAM_MSG msg, TBL_TEAM_MSG_FILE mfile
+		where msg.mno = mfile.MNO(+)
+		and msg.mno = #{mno}
+	</select>
+
 </mapper>

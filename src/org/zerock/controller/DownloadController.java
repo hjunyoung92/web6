@@ -1,8 +1,7 @@
-package org.zerock.service;
+package org.zerock.controller;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.ServletException;
@@ -13,52 +12,41 @@ import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.log4j.Log4j;
 
-/**
- * Servlet implementation class DonwloadController
- */
 @WebServlet("/download")
 @Log4j
-public class DonwloadController extends HttpServlet {
+public class DownloadController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public DonwloadController() {
+    public DownloadController() {
         super();
-       
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+    
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		log.info("Download service.....");
 		
-		log.info("야이");
+		//음악파일
 		String fileName = request.getParameter("fname");
 		
-		log.info("filename" + fileName);
+		log.info("fileName: "+fileName);
 		
 		response.setContentType("application/octet-stream");
+		
 		OutputStream os = response.getOutputStream();
 		
-		InputStream fin = new FileInputStream("C://zzz//"+fileName);
+		FileInputStream fin = new FileInputStream("C:\\zzz\\"+fileName);
 		
 		String filename = new String(fileName.getBytes(), "8859_1");
 
 		response.setHeader("Content-Disposition", "attachment;filename=" + filename);
-
 		
 		byte[] buffer = new byte[1024*8];
 		
 		while(true) {
 			int count = fin.read(buffer);
-			if(count == -1) {break;}
-			
+			if( count == -1) break;
 			os.write(buffer,0,count);
 		}
+	
 	}
 
-	
-	
 }

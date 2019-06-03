@@ -6,14 +6,28 @@
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+			<param name="ConversionPattern" value="%-5p: %c %L - %m%n" />
 		</layout>
 	</appender>
 	
+	   <!--  날짜별 로그 -->  
+    <appender name="dailyout" class="org.apache.log4j.DailyRollingFileAppender">  
+        <!-- 이것은 날짜별로  로그를 남김. 파일명.확장자.DatePattern으로 정의 함 . value에 경로-->  
+        <param name="file" value="C:\\zzz\\dailyout.log"/>  
+        <param name="Append" value="true"/>  
+        <param name="DatePattern" value="'.'yyMMdd"/>  
+        <layout class="org.apache.log4j.PatternLayout">  
+        <!-- 패턴의 예약어들. %t>는 스레드 L은 줄 c는 클래스패스-->
+            <param name="ConversionPattern" value="%t> [%d{yyyy-MM-dd HH:mm:ss}] [%c{1}] [%L] [%p] %m %n"/>  
+        </layout>  
+    </appender>  
+	
 	<!-- Root Logger -->
 	<root>
-		<priority value="debug" />
+		<!-- priority value= 로거 레벨 그리고 appender는 장소 -->
+		<priority value="info" />
 		<appender-ref ref="console" />
+		<appender-ref ref="dailyout" />
 	</root>
 	
 </log4j:configuration>
