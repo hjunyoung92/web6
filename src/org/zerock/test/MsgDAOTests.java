@@ -1,7 +1,10 @@
 package org.zerock.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.zerock.dao.MsgDAO;
+import org.zerock.domain.PageVO;
 import org.zerock.domain.MsgFileVO;
 import org.zerock.domain.MsgVO;
 
@@ -10,8 +13,6 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class MsgDAOTests {
 	private MsgDAO dao = new MsgDAO();
-	
-	
 	
 	@Test
 	public void testInsert() {
@@ -48,8 +49,26 @@ public class MsgDAOTests {
 	
 	@Test
 	public void testReceiveList() {
-		dao.selectReceiveList("baba").forEach(vo->log.info(vo));
+		PageVO pvo = new PageVO();
+		pvo.setPage(1);
+		pvo.setUserName("baba");
+		dao.selectReceiveList(pvo).forEach(vo->log.info(vo));
 	}
 	
+	@Test
+	public void testMsgCountTotal() {
+		assertEquals(4, dao.msgCountTotal("baba"));
+	}
 	
+	@Test
+	public void testRead() {
+		log.info(dao.selectOne(44));
+	}
+	
+	@Test
+	public void testUpdateRead() {
+		
+		dao.updateRead(1);
+		log.info(dao.selectOne(1));
+	}
 }

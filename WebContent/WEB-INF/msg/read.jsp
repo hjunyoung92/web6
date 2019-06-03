@@ -9,22 +9,22 @@
 <title>Insert title here</title>
 </head>
 <body>
-<p>
-메시지 번호${vo.mno}
-</p>
-<p>
-Sender${vo.sender}
-</p>
-<p>
-whom${vo.whom}
-</p>
-<p>
-MSG${vo.msg}
-</p>
-<u1>
-<c:forEach items="${vo.files}" var="fvo">
-<li><a href='/download?fname=${fvo.savename}'>${fvo.originname} </a></li>
-</c:forEach>
-</u1>
+	<p>
+		메시지 번호 ${vo.mno}
+	</p>
+	<p>
+		sender ${vo.sender}
+	</p>
+	<p>
+		whom ${vo.whom}
+	</p>
+	<p>
+		msg ${vo.msg}
+	</p>
+	<ul>
+	<c:forEach items="${vo.files }" var="fvo">
+	<li> <a href='/download?fname=${fvo.savename}'>${fvo.originname }</a></li>
+	</c:forEach>
+	</ul>
 </body>
 </html>

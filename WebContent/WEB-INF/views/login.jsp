@@ -4,15 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Login page</title>
+<title>login page</title>
 </head>
 <body>
-<h1>
-Login page
-</h1>
+	<h1>로그인 페이지</h1>
 	<form action="/member/login" method="post">
-		<input type='text' name='uid'> <input type='text' name='upw'>
+		<input type='text' name='uid'>
+		<input type='text' name='upw'>
 		<button>로그인</button>
-
+	</form>
 </body>
 </html>

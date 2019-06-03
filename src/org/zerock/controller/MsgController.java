@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.zerock.dao.MsgDAO;
+import org.zerock.domain.PageVO;
 import org.zerock.domain.MsgFileVO;
 import org.zerock.domain.MsgVO;
+import org.zerock.domain.PageDTO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -22,15 +24,49 @@ public class MsgController extends AbstractController {
 
 	private MsgDAO dao = new MsgDAO();
 	
-	public String readGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Integer mno = getInt("mno", request);
-		MsgVO vo = dao.selectOne(mno);
+	public String receiveGET (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		log.info(vo);
-		request.setAttribute("vo", vo);
+		log.info("receive list.....");
+		
+		String userName = (String)request.getSession().getAttribute("LOGINID");
+//		String userName = "baba";
+//		String userName = "babamba";
+		//TODO: paging
+		//TODO: 1. countTotal -> done
+		int current = getInt("page", request, 1);
+		log.info(current);
+		int total = dao.msgCountTotal(userName);
+		request.setAttribute("pageManager", new PageDTO(current,total));
+
+		//TODO: 2. overhaul receive dao query.
+		PageVO pvo = new PageVO();
+		pvo.setPage(current);
+		pvo.setUserName(userName);
+		//set list to request
+		request.setAttribute("list", dao.selectReceiveList(pvo));
+		
+		//TODO: 3. setAtt. pageManager, new DTO
+		request.setAttribute("pageMananger", new PageDTO(current, total));
+		//TODO: 4. jsp
+		return "msg/receive";
+	}
+	
+	//끝
+	public String readGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Integer mno = getInt("mno",request);
+
+		MsgVO mvo = dao.selectOne(mno);
+		dao.updateRead(mno);
+
+		log.info(mvo);
+
+		request.setAttribute("vo", mvo);
+		
 		
 		return "msg/read";
 	}
+	
 	
 	public String registerGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("register GET");
@@ -39,21 +75,8 @@ public class MsgController extends AbstractController {
 	
 	}
 	
-	public String receiveGET (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		log.info("receive list.....");
-		
-		String userName = (String) request.getSession().getAttribute("LOGINID");
-        // String userName = "baba";
-		// String userName = "babamba";
-
-		request.setAttribute("list", dao.selectReceiveList(userName));
-
-		return "msg/receive";
-	}
-
-	public String registerPOST(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	
+	public String registerPOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("register POST");
 		
 		//폼 값에서 받은 정보로 MsgVO를 만든다. 업로드 단계

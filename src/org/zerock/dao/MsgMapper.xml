@@ -16,37 +16,58 @@
 		values (seq_team_file.nextval, seq_team_msg.currval,
 		#{savename},#{originname})
 	</insert>
-
-	<select id="receiveList" resultType="MsgVO">
+<!-- 
+	<select id="receiveList_old" resultType="MsgVO">
 		select * from tbl_team_msg
 		where whom = #{username} order by mno desc
 	</select>
+ -->
+	<!-- 순서대로 파싱하기 떄문에 MsgMap을 여기다가 만들어준다. -->
 	<resultMap type="MsgVO" id="MsgMap">
-	
-	<id column="mno" property="mno"/>
-	
-	<result column="whom" property="whom"/>
-	<result column="sender" property="sender"/>
-	<result column="msg" property="msg"/>
-	<result column="regdate" property="regdate"/>
-	<collection property="files" resultMap="FileMap">
-	<id column="mno" property="mno"/>
-	</collection>
-	
+		<!-- id는 group by같은놈 키 값 -->
+		<id column="mno" property="mno" />
+		<result column="sender" property="sender" />
+		<result column="whom" property="whom" />
+		<result column="msg" property="msg" />
+		<result column="gubun" property="gubun"/>
+		<result column="regdate" property="regdate" />
+		
+		<collection property="files" resultMap="FileMap">
+			<id column="mno" property="mno" />
+		</collection>
 	</resultMap>
 
 	<resultMap type="MsgFileVO" id="FileMap">
-	<id property="fno" column="fno"/>
-	<result column="mno" property="mno"/>
-	<result column="savename" property="savename"/>
-	<result column="originname" property="originname"/>
-	
+		<id property="fno" column="fno" />
+		<result column="savename" property="savename" />
+		<result column="originname" property="originname" />
 	</resultMap>
+
 	<select id="read" resultMap="MsgMap">
-		select *
-		from TBL_TEAM_MSG msg, TBL_TEAM_MSG_FILE mfile
-		where msg.mno = mfile.MNO(+)
-		and msg.mno = #{mno}
+		select * from TBL_TEAM_MSG msg, TBL_TEAM_MSG_FILE mfile
+		where msg.mno = mfile.mno(+) and msg.mno = #{mno}
 	</select>
 
+	<update id="updateRead" parameterType="int">
+		update tbl_team_msg set gubun='Y' where mno = #{mno}
+	</update>
+	
+	<select id="msgCountTotal"  resultType="int">
+		select count(MNO) from TBL_TEAM_MSG where whom = #{userName}
+	</select>
+	
+	  <select id="receiveList" parameterType="PageVO" resultType="MsgVO" >
+	  <![CDATA[
+		select
+		    mno, sender, whom, msg, gubun, regdate
+		from (
+		    select /*+INDEX_DESC(TBL_TEAM_MSG PK_TEAM_MSG)*/
+		           rownum rn, mno, sender, whom, msg, gubun, regdate
+		    from TBL_TEAM_MSG
+		    where (mno >0 and whom = #{userName})and rownum <=( #{page}* 10)
+		    )
+		where
+		    rn> (#{page}-1) * 10
+	  ]]>
+  </select>
 </mapper>

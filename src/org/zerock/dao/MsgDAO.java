@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.zerock.domain.MsgFileVO;
 import org.zerock.domain.MsgVO;
+import org.zerock.domain.PageVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -12,20 +13,6 @@ import lombok.extern.log4j.Log4j;
 public class MsgDAO {
 	private static final String PRE = "org.zerock.dao.";
 	protected String mapperName = "MsgMapper";
-	
-	public MsgVO selectOne(Integer mno) {
-		MsgVO result = null;
-
-		try (SqlSession session = MyBatisLoader.sqlSessionFactory.openSession(true)) {
-
-			result = session.selectOne(PRE + mapperName + ".read", mno);
-
-		} catch (Exception e) {
-			throw e;
-		}
-
-		return result;
-	}
 
 	public void insert(MsgVO mvo) {
 		log.info(mvo);
@@ -69,19 +56,57 @@ public class MsgDAO {
 		}
 	}
 	
-	public List<MsgVO> selectReceiveList(String userName){
+	public List<MsgVO> selectReceiveList(PageVO namePage){
 		
 		List<MsgVO> result = null;
 		
 		try (SqlSession session = MyBatisLoader.sqlSessionFactory.openSession(true)) {
 
-			result = session.selectList(PRE + mapperName + ".receiveList", userName);
+			result = session.selectList(PRE + mapperName + ".receiveList", namePage);
 
 		} catch (Exception e) {
 			throw e;
 		}
 		
 		return result;
+	}
+	
+	public MsgVO selectOne(Integer mno) {
+		MsgVO result = null;
+		
+		try (SqlSession session = MyBatisLoader.sqlSessionFactory.openSession(true)) {
+
+			result = session.selectOne(PRE + mapperName + ".read", mno);
+
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return result;
+	}
+	
+	public void updateRead(Integer mno) {
+		try (SqlSession session = MyBatisLoader.sqlSessionFactory.openSession(true)) {
+
+			session.update(PRE + mapperName + ".updateRead", mno);
+
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+	
+	public int msgCountTotal(String userName) {
+		int msgCount;
+		
+		try (SqlSession session = MyBatisLoader.sqlSessionFactory.openSession(true)) {
+
+			msgCount = session.selectOne(PRE + mapperName + ".msgCountTotal", userName);
+
+		} catch (Exception e) {
+			throw e;
+		}
+		return msgCount;
 	}
 	
 }

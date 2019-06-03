@@ -20,7 +20,7 @@ public class DownloadController extends HttpServlet {
     public DownloadController() {
         super();
     }
-    
+
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("Download service.....");
 		
@@ -37,6 +37,9 @@ public class DownloadController extends HttpServlet {
 		
 		String filename = new String(fileName.getBytes(), "8859_1");
 
+		//파일이름에 날짜를 자르기
+		filename= filename.substring(filename.indexOf("_")+1);
+		
 		response.setHeader("Content-Disposition", "attachment;filename=" + filename);
 		
 		byte[] buffer = new byte[1024*8];
