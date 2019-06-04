@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j;
 
 /**
- * Servlet Filter implementation class CheckLoginFilter
+ * Servlet Filter implementation class CheckLoginFiter
  */
 @WebFilter("/msg/*")
 @Log4j
@@ -38,18 +38,20 @@ public class CheckLoginFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		log.info("filter run!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+		log.info("filter activated..............");
 		
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
+		HttpServletRequest req = (HttpServletRequest)request;
+		HttpServletResponse resp = (HttpServletResponse)response;
 		
 		Object value = req.getSession().getAttribute("LOGINID");
-		log.info("value----------------------------------");
+		
 		if(value == null) {
 			
-			res.sendRedirect("/member/login");
-			
+			resp.sendRedirect("/member/login");
+			return;
 		}
+		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}
 
