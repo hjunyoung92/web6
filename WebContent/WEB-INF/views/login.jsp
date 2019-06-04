@@ -13,5 +13,7 @@
 		<input type='text' name='upw'>
 		<button>로그인</button>
 	</form>
+	<a href="/member/join">회원가입</a>
+	
 </body>
 </html>

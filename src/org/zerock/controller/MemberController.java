@@ -5,14 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.zerock.dao.MemberDAO;
+import org.zerock.domain.MemberVO;
+
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 @WebServlet("/member/*")
-public class LoginController extends AbstractController {
+public class MemberController extends AbstractController {
 	private static final long serialVersionUID = 1L;
+	
+	private MemberDAO dao = new MemberDAO();
 
-	public LoginController() {
+	public MemberController() {
         super();
     }
 	
@@ -30,8 +35,26 @@ public class LoginController extends AbstractController {
 		
 		return "/views/sample";
 	}
-	
-	//첫페이지
+
+	public String joinGET(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "views/join";
+	}
+
+	public String joinPOST(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		MemberVO vo = new MemberVO();
+		vo.setMid(request.getParameter("mid"));
+		vo.setMpw(request.getParameter("mpw"));
+		vo.setMname(request.getParameter("mname")
+				);
+		
+		dao.insert(vo);
+		
+		return "redirect:/member/login";
+	}
+
+	// 첫페이지
 	public String loginGET(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		return "views/login";
@@ -44,14 +67,15 @@ public class LoginController extends AbstractController {
 		
 		log.info(uid);
 		log.info(upw);
+		MemberVO  vo = dao.selectOne(uid, upw);
 		
-		if(!uid.equals(upw)) {
-			log.error("login 실패");
-			return "redirect:/member/login";
-		} 
+//		if(!uid.equals(upw)) {
+//			log.error("login 실패");
+//			return "redirect:/member/login";
+//		} 
 			
 		HttpSession session = request.getSession();
-		session.setAttribute("LOGINID", uid);		
+		session.setAttribute("LOGINID", vo.getMid());		
 
 		return "redirect:/msg/receive"; 
 	}

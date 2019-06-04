@@ -26,6 +26,7 @@
 	<mappers>
 		<mapper resource="org/zerock/dao/TimeMapper.xml" />
 		<mapper resource="org/zerock/dao/MsgMapper.xml" />
+		<mapper resource="org/zerock/dao/MemberMapper.xml" />
 	</mappers>
 
 

@@ -25,7 +25,7 @@
 	<!-- Root Logger -->
 	<root>
 		<!-- priority value= 로거 레벨 그리고 appender는 장소 -->
-		<priority value="info" />
+		<priority value="debug" />
 		<appender-ref ref="console" />
 		<appender-ref ref="dailyout" />
 	</root>

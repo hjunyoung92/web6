@@ -8,11 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.zerock.dao.MemberDAO;
 import org.zerock.dao.MsgDAO;
-import org.zerock.domain.PageVO;
 import org.zerock.domain.MsgFileVO;
 import org.zerock.domain.MsgVO;
 import org.zerock.domain.PageDTO;
+import org.zerock.domain.PageVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -23,6 +24,7 @@ public class MsgController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 
 	private MsgDAO dao = new MsgDAO();
+	private MemberDAO memberDAO = new MemberDAO();
 	
 	public String receiveGET (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -70,6 +72,8 @@ public class MsgController extends AbstractController {
 	
 	public String registerGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("register GET");
+		
+		request.setAttribute("userList", memberDAO.getUserList());
 		
 		return "msg/register";
 	

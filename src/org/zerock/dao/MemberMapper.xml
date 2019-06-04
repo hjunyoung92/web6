@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.dao.MemberMapper">
+	<insert id="insert" parameterType="MemberVO">
+		insert into tbl_msg_member(mid,mpw,mname)
+		values(#{mid},#{mpw},#{mname})
+	</insert>
+	
+	<select id="read" resultType="MemberVO" parameterType="map">
+		select * from tbl_msg_member where mid = #{mid} and mpw = #{mpw}
+	</select>
+	
+	<select id="userlist" resultType="string">
+	select mid from tbl_msg_member order by mid
+	</select>
+
+</mapper>

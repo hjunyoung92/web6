@@ -9,6 +9,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+<h1>받은 메시지
+</h1>
+
 	
 	<style>
 	.read{
